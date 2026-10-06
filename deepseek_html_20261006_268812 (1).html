@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>成都-都江堰-三星堆 3日游手册</title>
+    <style>
+        :root {
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --accent-color: #1a73e8;
+            --border-color: #e0e0e0;
+            --map-line: #cbd5e1;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --card-bg: #1e1e1e;
+                --text-primary: #ffffff;
+                --text-secondary: #aaaaaa;
+                --accent-color: #8ab4f8;
+                --border-color: #333333;
+                --map-line: #444444;
+            }
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 16px;
+            padding-bottom: 50px;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        
+        /* 顶部倒计时卡片 */
+        .countdown-card {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            color: white;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+        }
+        .countdown-card h2 { font-size: 16px; font-weight: 500; opacity: 0.9; margin-bottom: 8px; }
+        .countdown-timer { font-size: 28px; font-weight: 700; letter-spacing: 1px; }
+        .countdown-label { font-size: 12px; opacity: 0.8; margin-top: 8px; display: block; }
+
+        /* 通用卡片样式 */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+        .card-title::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background-color: var(--accent-color);
+            margin-right: 8px;
+            border-radius: 2px;
+        }
+
+        /* SVG 地图 */
+        .map-container { width: 100%; overflow: hidden; }
+        svg { width: 100%; height: auto; display: block; }
+
+        /* 行程列表 */
+        .day-section { margin-bottom: 24px; }
+        .day-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+        }
+        .timeline-item {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        .timeline-time {
+            width: 70px;
+            flex-shrink: 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .timeline-content {
+            flex-grow: 1;
+            font-size: 14px;
+        }
+        .timeline-content strong { font-weight: 600; }
+        .timeline-content .note {
+            font-size: 12px;
+            color: #e65100;
+            background: #fff3e0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 4px;
+        }
+        @media (prefers-color-scheme: dark) {
+            .timeline-content .note { background: #4a2c0b; color: #ffb74d; }
+        }
+
+        /* 待办清单 */
+        .todo-list { list-style: none; }
+        .todo-list li {
+            font-size: 14px;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border-color);
+            display: flex;
+            align-items: flex-start;
+        }
+        .todo-list li::before {
+            content: "☐";
+            margin-right: 8px;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        .todo-list li:last-child { border-bottom: none; }
+
+        /* 实用贴士 */
+        .tips p { font-size: 14px; margin-bottom: 8px; }
+        .tips strong { color: var(--accent-color); }
+
+        /* 导航链接 */
+        .nav-link {
+            display: inline-block;
+            background-color: var(--border-color);
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .nav-link:hover { background-color: var(--accent-color); color: white; }
+        
+        .placeholder-text {
+            color: #d32f2f;
+            font-size: 13px;
+            background: #ffebee;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+        @media (prefers-color-scheme: dark) {
+            .placeholder-text { background: #4a1010; color: #ef9a9a; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- 顶部倒计时 -->
+    <div class="countdown-card">
+        <h2>距离出发还有</h2>
+        <div class="countdown-timer" id="countdown">计算中...</div>
+        <span class="countdown-label">2026年10月8日 08:00 (北京时间)</span>
+    </div>
+
+    <!-- 行程总览地图 -->
+    <div class="card">
+        <div class="card-title">行程总览</div>
+        <div class="map-container">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- 重庆 -> 成都 -->
+                <path d="M 40 160 Q 100 180 160 120" stroke="#1a73e8" stroke-width="3" fill="none" stroke-dasharray="6,4" />
+                <text x="90" y="155" font-size="10" fill="#1a73e8" text-anchor="middle" font-weight="bold">10/8</text>
+                
+                <!-- 成都 -> 广汉(三星堆) -->
+                <path d="M 160 120 Q 220 60 280 80" stroke="#e65100" stroke-width="3" fill="none" stroke-dasharray="6,4" />
+                <text x="225" y="80" font-size="10" fill="#e65100" text-anchor="middle" font-weight="bold">10/10</text>
+                
+                <!-- 成都 -> 都江堰 -->
+                <path d="M 160 120 Q 120 80 90 60" stroke="#2e7d32" stroke-width="3" fill="none" stroke-dasharray="6,4" />
+                <text x="120" y="85" font-size="10" fill="#2e7d32" text-anchor="middle" font-weight="bold">10/9</text>
+
+                <!-- 节点 -->
+                <circle cx="40" cy="160" r="6" fill="#1a73e8" />
+                <text x="40" y="180" font-size="12" text-anchor="middle" fill="currentColor">重庆</text>
+                
+                <circle cx="160" cy="120" r="8" fill="#1a73e8" />
+                <text x="160" y="145" font-size="12" text-anchor="middle" fill="currentColor" font-weight="bold">成都</text>
+                
+                <circle cx="280" cy="80" r="6" fill="#e65100" />
+                <text x="280" y="100" font-size="12" text-anchor="middle" fill="currentColor">三星堆</text>
+                
+                <circle cx="90" cy="60" r="6" fill="#2e7d32" />
+                <text x="90" y="80" font-size="12" text-anchor="middle" fill="currentColor">都江堰</text>
+            </svg>
+        </div>
+    </div>
+
+    <!-- 已确认的预订（占位） -->
+    <div class="card">
+        <div class="card-title">已确认的预订</div>
+        <div class="placeholder-text">
+            ⚠️ 目前暂未上传订单截图。<br>
+            请在定好车票、酒店、门票后，把截图发给 AI，AI 会帮你把具体信息（车次、时间、地址、电话）填到这里。
+        </div>
+    </div>
+
+    <!-- 逐日行程 -->
+    <div class="card">
+        <div class="card-title">逐日行程</div>
+        
+        <!-- Day 1 -->
+        <div class="day-section">
+            <div class="day-header">10月8日 (周四) · 重庆 → 成都 · 武侯祠</div>
+            <div class="timeline-item">
+                <div class="timeline-time">07:00</div>
+                <div class="timeline-content">重庆西/沙坪坝站出发，乘高铁前往成都东。约1.5-2小时。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">10:00</div>
+                <div class="timeline-content">抵达成都，前往酒店放行李（建议住春熙路/武侯祠附近）。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">12:00</div>
+                <div class="timeline-content"><strong>午餐</strong>：酒店附近解决，推荐担担面或川菜馆。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">13:00</div>
+                <div class="timeline-content"><strong>武侯祠</strong> <a href="https://uri.amap.com/search?keyword=成都武侯祠博物馆" class="nav-link">导航</a><br>门票50元，游玩2-3小时。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">16:30</div>
+                <div class="timeline-content"><strong>锦里</strong> <a href="https://uri.amap.com/search?keyword=成都锦里" class="nav-link">导航</a><br>逛古街，吃小吃，解决晚餐。晚上看夜景。</div>
+            </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-section">
+            <div class="day-header">10月9日 (周五) · 成都 → 青城山 → 都江堰 · 蓝眼泪</div>
+            <div class="timeline-item">
+                <div class="timeline-time">07:30</div>
+                <div class="timeline-content">成都地铁2号线到犀浦站，换乘城际列车去青城山站（约30分钟）。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">08:30</div>
+                <div class="timeline-content"><strong>青城山前山</strong> <a href="https://uri.amap.com/search?keyword=青城山前山" class="nav-link">导航</a><br>门票80元，游玩3-4小时。建议索道上山省力。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">13:00</div>
+                <div class="timeline-content"><strong>午餐</strong>：青城山镇，推荐罗鸡肉或张醪糟。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">14:30</div>
+                <div class="timeline-content"><strong>都江堰景区</strong> <a href="https://uri.amap.com/search?keyword=都江堰景区" class="nav-link">导航</a><br>门票80元，游玩3小时。<strong>重要：从6号门（秦堰楼）进，全程下坡！</strong></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">18:00</div>
+                <div class="timeline-content"><strong>晚餐</strong>：灌县古城，推荐葱葱卷、醪糟粉子。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">19:30</div>
+                <div class="timeline-content"><strong>南桥蓝眼泪</strong> <a href="https://uri.amap.com/search?keyword=都江堰南桥" class="nav-link">导航</a><br>免费，最佳观赏时间20:00-21:30。亮灯至22:00。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">21:30</div>
+                <div class="timeline-content"><span class="note">注意</span> 必须赶回都江堰站，乘城际列车回成都（末班约22:30）。</div>
+            </div>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day-section">
+            <div class="day-header">10月10日 (周六) · 成都 → 三星堆 → 重庆</div>
+            <div class="timeline-item">
+                <div class="timeline-time">08:00</div>
+                <div class="timeline-content">成都东站乘城际列车到广汉北站（约18分钟）。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">09:00</div>
+                <div class="timeline-content"><strong>三星堆博物馆</strong> <a href="https://uri.amap.com/search?keyword=三星堆博物馆" class="nav-link">导航</a><br>门票72元，务必提前预约。游玩3-4小时，建议租讲解器。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">13:30</div>
+                <div class="timeline-content"><strong>午餐</strong>：广汉市区，推荐连山回锅肉、缠丝兔。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">15:00</div>
+                <div class="timeline-content">返回广汉北站，乘城际回成都东，再换乘高铁回重庆。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">18:00</div>
+                <div class="timeline-content">抵达重庆，结束行程。</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 待办清单 -->
+    <div class="card">
+        <div class="card-title">待办清单</div>
+        <ul class="todo-list">
+            <li>提前预约三星堆博物馆门票（官方公众号）</li>
+            <li>提前预约青城山、都江堰门票</li>
+            <li>购买重庆往返成都的高铁票</li>
+            <li>预订成都市区酒店（春熙路/武侯祠附近）</li>
+            <li>准备青城山和都江堰的防风薄外套</li>
+            <li>下载高德地图APP，方便导航</li>
+        </ul>
+    </div>
+
+    <!-- 实用贴士 -->
+    <div class="card tips">
+        <div class="card-title">实用贴士</div>
+        <p><strong>1. 蓝眼泪时间：</strong>南桥“蓝眼泪”亮灯时间为19:30-22:00，最佳观赏时段20:00-21:30。看完务必赶在22:30前到达都江堰站，坐末班城际回成都。</p>
+        <p><strong>2. 都江堰省力路线：</strong>一定要从6号门（秦堰楼）进景区，这样全程下坡，依次看二王庙→安澜索桥→鱼嘴→飞沙堰→宝瓶口，最后从南门出，不走回头路。</p>
+        <p><strong>3. 门票预约：</strong>三星堆、青城山、都江堰、武侯祠全部需要提前在官方公众号实名预约，尤其三星堆非常抢手，建议提前5天抢票。</p>
+        <p><strong>4. 交通衔接：</strong>从都江堰回成都，买票要买到“犀浦站”（离堆公园站），不要买“都江堰→成都东”的绕行班次。</p>
+        <p><strong>5. 吃饭时间：</strong>9号行程非常满，午餐和晚餐时间已预留。如果青城山玩得久，建议午餐简单吃，保证下午都江堰的游玩时间。</p>
+    </div>
+
+</div>
+
+<script>
+    // 倒计时逻辑：目标时间为 2026年10月8日 08:00:00 北京时间 (UTC+8)
+    const targetDate = new Date('2026-10-08T08:00:00+08:00').getTime();
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance < 0) {
+            document.getElementById('countdown').innerHTML = "行程已开始/结束";
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('countdown').innerHTML = 
+            `${days}天 ${hours}时 ${minutes}分 ${seconds}秒`;
+    }
+
+    // 每秒更新一次
+    setInterval(updateCountdown, 1000);
+    // 初始化
+    updateCountdown();
+</script>
+</body>
+</html>
